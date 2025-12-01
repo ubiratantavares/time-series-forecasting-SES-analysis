@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from model.data import Data
 from controller.controller import Controller
 
 def main():
