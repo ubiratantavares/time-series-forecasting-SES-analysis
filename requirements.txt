@@ -1,0 +1,14 @@
+# Dependências principais para manipulação de dados e séries temporais
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Dependências para Modelagem Estatística e Testes de Séries Temporais (Q2, Q3)
+statsmodels>=0.14.0
+
+# Dependências para Visualização (Q1, Q2, Q3, Q4)
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# Dependências para Métricas de Acurácia e Detecção de Outliers (Q3, Q4)
+scikit-learn>=1.3.0
+jinja2>=3.1.2
