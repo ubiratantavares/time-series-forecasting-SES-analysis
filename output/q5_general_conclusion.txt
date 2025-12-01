@@ -1,0 +1,22 @@
+Questão 5: Conclusão Geral sobre o Modelo Estimado:
+
+Com base nas análises realizadas (Sazonalidade, Estacionariedade, Previsão SES e Outliers), conclui-se que:
+
+1. Desempenho do Modelo (Acurácia):
+* O modelo SES apresentou um MAPE de 15.65% e um RMSE de 7.8038.
+* O erro percentual é relativamente baixo, indicando que o modelo consegue capturar o nível da série com razoável precisão a curto prazo.
+
+2. Adequação do Método SES:
+* O parâmetro de suavização (alpha) estimado foi de 0.0495.
+* Um alpha baixo indica que a série possui uma memória longa e o nível muda lentamente.
+* O SES é adequado para séries estacionárias ou com mudanças de nível lentas e sem tendência/sazonalidade determinísticas.
+* IMPORTANTE: O SES projeta uma previsão constante (flat). Se as análises anteriores (Q1/Q2) indicaram sazonalidade ou tendência,
+* o SES é teoricamente INSUFICIENTE para previsões de longo prazo, pois ignorará esses componentes estruturais.
+
+3. Confiabilidade e Robustez:
+* A presença de outliers (diagnosticada na Q4) deve ser considerada. Se houver outliers recentes, a previsão do SES (que depende do nível final) pode ser enviesada.
+* A simplicidade do SES é uma vantagem para robustez (menos parâmetros para estimar), mas uma desvantagem para capturar dinâmicas complexas.
+
+4. Veredito Final:
+* O modelo SES é ACEITÁVEL para previsões de curtíssimo prazo (h pequeno), dada sua simplicidade e acurácia razoável neste horizonte.
+* No entanto, para horizontes maiores ou se a sazonalidade for confirmada como relevante, recomenda-se testar modelos mais completos (ex: Holt-Winters ou SARIMA).

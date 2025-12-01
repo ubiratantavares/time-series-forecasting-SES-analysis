@@ -1,0 +1,16 @@
+Test,Metric,Value
+ADF,Test Statistic,-4.808291253559765
+ADF,p-value,5.2434129901498554e-05
+ADF,Lags Used,6.0
+ADF,Number of Observations Used,358.0
+ADF,Critical Value 1%,-3.448748905151901
+ADF,Critical Value 5%,-2.8696473721448728
+ADF,Critical Value 10%,-2.5710891239349585
+ADF,IC Best,2343.8290926464197
+KPSS,Test Statistic,1.6129657593856863
+KPSS,p-value,0.01
+KPSS,Lags Used,7.0
+KPSS,Critical Value 10%,0.347
+KPSS,Critical Value 5%,0.463
+KPSS,Critical Value 2.5%,0.574
+KPSS,Critical Value 1%,0.739

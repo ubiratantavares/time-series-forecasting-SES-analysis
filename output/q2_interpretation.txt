@@ -1,0 +1,8 @@
+Análise de Estacionaridade (Nível de Significância 0.05):
+
+ADF Test: p-value = 0.0001 -> Rejeita H0 (Estacionária)
+KPSS Test: p-value = 0.0100 -> Rejeita H0 (Não Estacionária)
+
+Conclusão:
+Resultados conflitantes: ADF indica estacionariedade, mas KPSS indica não estacionariedade.
+Isso pode indicar que a série é 'Difference Stationary' (estacionária após diferenciação) ou possui tendência determinística (Trend Stationary).

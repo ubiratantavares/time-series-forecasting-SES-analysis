@@ -1,0 +1,18 @@
+Questão 3: Interpretação dos Resultados SES:
+
+1. Parâmetro de Suavização (Alpha): 0.0495
+* O valor de alpha é baixo (próximo de 0).
+* Isso indica que o modelo dá peso similar a todo o histórico (memória longa).
+* A previsão é muito suave e reage lentamente a mudanças recentes.
+
+2. O que indicaram os resultados do MAPE e RMSE?
+* MAPE: 15.65%
+* RMSE: 7.8038
+* O MAPE entre 10% e 20% indica uma boa acurácia.
+* O RMSE fornece uma estimativa do desvio padrão dos erros de previsão na mesma escala dos dados.
+
+3. O método SES é adequado à série?
+* O SES (Suavização Exponencial Simples) é ideal para séries SEM tendência e SEM sazonalidade claras,
+* pois projeta um nível constante (flat forecast).
+* Dado o erro relativamente baixo, o SES parece fornecer uma aproximação razoável para o horizonte de curto prazo,
+* embora deva-se ter cautela se houver evidências de tendência/sazonalidade nos testes anteriores.

@@ -1,0 +1,8 @@
+Questão 1: Interpretação da Análise de Autocorrelação:
+1. Análise de Sazonalidade:
+* Observam-se picos significativos nas defasagens sazonais: [7, 21, 28].
+* O padrão sugere a presença de sazonalidade na série.
+
+2. Análise de Dependência Temporal (Persistência):
+* A autocorrelação permanece significativa continuamente para as primeiras 2 defasagens.
+* A autocorrelação decai rapidamente, sugerindo uma série estacionária ou com dependência de curto prazo.

@@ -1,0 +1,25 @@
+Questão 4: Interpretação do Diagnóstico de Outliers:
+
+1. Método de Avaliação:
+* Utilizou-se a análise dos resíduos do modelo SES (estimado na Q3).
+* O critério para identificação de outliers foi o método de 3 Desvios Padrão (3-Sigma).
+* Pontos onde os resíduos desviam mais de 3 vezes o desvio padrão da média foram considerados outliers.
+
+2. Pontos Influentes / Outliers Identificados:
+* Foram identificados 3 outliers:
+     - Data: 1959-08-05, Resíduo: 22.2095
+     - Data: 1959-09-02, Resíduo: 25.1682
+     - Data: 1959-09-23, Resíduo: 26.8910
+
+3. Natureza dos Pontos (Erros/Episódios Atípicos ou Movimentos Reais?):
+* A distinção entre erro e movimento real depende do contexto da série (ex: nascimentos).
+* Picos isolados podem indicar eventos específicos (feriados, eventos naturais) ou erros de coleta.
+* Se os outliers forem consecutivos, podem indicar uma mudança estrutural ou um evento duradouro.
+* Dado que estamos analisando nascimentos, valores extremos podem ser reais (sazonalidade atípica) mas raros.
+
+4. Impacto na Capacidade Preditiva:
+* O desvio padrão dos resíduos é 7.0548.
+* A presença de outliers pode inflar as métricas de erro (especialmente RMSE, que penaliza erros grandes).
+* Eles aumentam a incerteza das previsões (intervalos de confiança mais largos).
+* Se os outliers forem eventos passados não recorrentes, eles podem não afetar a previsão futura pontual do SES (que pesa mais o recente),
+mas se ocorreram recentemente, podem distorcer o nível estimado (smoothing level) e a previsão flat.
