@@ -1,0 +1,44 @@
+Segunda Lista Prática para Nota – Previsão e Diagnóstico em Séries Temporais
+Séries, Periodicidade e Suavização Exponencial e avaliação de Outliers
+Prof. Roberto Santolin
+04/10/2025
+
+Instruções
+
+Use uma série temporal de sua escolha. Descreva esta série e ajuste a frequência adequadamente (mensal: 12, trimestral: 4), não use séries anuais!!!!. Responda a todas as
+questões, incluindo interpretação dos resultados.
+Atenção: Seu relatório final não pode ultrapassar 15 páginas incluindo códigos, saídas, gráficos e interpretações.
+
+Questão 1 — Periodicidade e Autocorrelação
+
+Objetivo: detectar sazonalidade/periodicidade e dependência temporal.
+
+Interprete: há picos em defasagens sazonais (mensal: 12, trimestral: 4)? O padrão sugere sazonalidade? Há persistência alta (autocorrelação lenta)?
+
+Questão 2 — Estacionariedade (ADF e KPSS)
+
+Objetivo: avaliar presença de tendência/raiz unitária.
+
+Interprete: os testes concordam? sazonal/trend?
+
+Questão 3 — Estimar e Gerar Previsão comSuavização Exponencial Simples (SES) e Avaliação fora da amostra (Treino/Teste)
+
+Objetivo: gerar previsões h passos à frente via SES e avaliar acurácia preditiva do SES
+
+(escolha h=12 para série mensal; e h = 4 para série trimestral).
+Interprete: qual o valor estimado do parâmetro de suavização (alpha)? As previsões fazem
+sentido frente ao histórico?
+
+Interprete: O que indicaram os resultados do MAPE e RMSE? O método SES é adequado
+à sua série?
+
+Questão 4 — Diagnóstico de Outliers
+
+Objetivo: identificar pontos influentes e outliers e discutir possíveis impactos.
+Interprete: Diga qual método pretende usar para avaliar possíveis outliers nas sua estimativas. Quais pontos aparecem como outliers/influentes? Eles parecem erros/episódios atípicos
+ou movimentos reais? Estes pontos parecerem interferir na capacidade preditiva dos seus
+dados?
+
+Questão 5 - Conclusão Geral sobre o Modelo Estimado
+
+Interprete: Qual é a sua conclusão geral sobre o seu modelo estimado?
