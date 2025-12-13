@@ -8,7 +8,7 @@ Questão 4: Interpretação do Diagnóstico de Outliers:
 2. Pontos Influentes / Outliers Identificados:
 * Foram identificados 3 outliers:
      - Data: 1959-08-05, Resíduo: 22.2095
-     - Data: 1959-09-02, Resíduo: 25.1682
+     - Data: 1959-09-02, Resíduo: 25.1683
      - Data: 1959-09-23, Resíduo: 26.8910
 
 3. Natureza dos Pontos (Erros/Episódios Atípicos ou Movimentos Reais?):

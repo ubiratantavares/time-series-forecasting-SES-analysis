@@ -1,6 +1,7 @@
 import json
 import os
 import pandas as pd
+import subprocess
 from jinja2 import Template
 
 """
@@ -109,13 +110,9 @@ class Relatorio:
         # Template Jinja2
         template_str = r"""\documentclass[12pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
-\usepackage[portuguese]{babel}
 \usepackage{graphicx}
-\usepackage{float}
 \usepackage{geometry}
-\usepackage{booktabs}
 \geometry{a4paper, margin=2.5cm}
-\usepackage{hyperref}
 
 \title{Relatório de Análise de Série Temporal: \\Nascimentos Femininos}
 \author{Ubiratan da Silva Tavares}
@@ -128,7 +125,7 @@ class Relatorio:
 \section{Introdução}
 Este relatório apresenta a análise da série temporal de nascimentos femininos diários. O objetivo é compreender a dinâmica da série, identificar padrões como sazonalidade e tendência, diagnosticar a estacionariedade, estimar um modelo de previsão (Suavização Exponencial Simples - SES) e avaliar a presença de \textit{outliers}.
 
-Para garantir a transparência e a replicabilidade dos resultados apresentados neste relatório, todo o código fonte encontra-se disponível publicamente no repositório do GitHub: \url{https://github.com/ubiratantavares/time-series-forecasting-SES-analysis}.
+Para garantir a transparência e a replicabilidade dos resultados apresentados neste relatório, todo o código fonte encontra-se disponível publicamente no repositório do GitHub: \texttt{https://github.com/ubiratantavares/time-series-forecasting-SES-analysis}.
 
 \section{Metodologia}
 A análise foi conduzida utilizando a linguagem Python e um conjunto de bibliotecas especializadas para ciência de dados e estatística. A seguir, detalha-se a utilização de cada pacote no projeto:
@@ -162,7 +159,7 @@ A metodologia analítica seguiu as seguintes etapas:
 
 A Figura \ref{fig:q1_plot} apresenta os correlogramas da série.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=1.0\textwidth]{q1_acf_pacf.png}
     \caption{Função de Autocorrelação (ACF) e Autocorrelação Parcial (PACF)}
@@ -170,66 +167,100 @@ A Figura \ref{fig:q1_plot} apresenta os correlogramas da série.
 \end{figure}
 
 A análise dos correlogramas revela informações importantes sobre a estrutura da série temporal. 
-Observam-se picos significativos nas defasagens sazonais ([7, 21, 28]), o que sugere fortemente a presença de um componente sazonal na série. Este padrão repetitivo indica que os nascimentos seguem um ciclo regular, provavelmente semanal.
-Além disso, a análise da dependência temporal mostra que a autocorrelação permanece significativa para as primeiras 2 defasagens. 
+{% if q1.peaks %}
+Observam-se picos significativos nas defasagens sazonais ({{ q1.peaks }}), o que sugere fortemente a presença de um componente sazonal na série. Este padrão repetitivo indica que a série segue um ciclo regular (Frequência: {{ q1.freq }}).
+{% else %}
+Não foram observados picos significativos nas defasagens sazonais esperadas, sugerindo ausência de sazonalidade forte nesta frequência.
+{% endif %}
+
+Além disso, a análise da dependência temporal mostra que a autocorrelação permanece significativa para as primeiras {{ q1.persistence }} defasagens.
+{% if q1.persistence > 5 %}
+Isso indica uma alta persistência (memória longa), o que pode sugerir não-estacionariedade.
+{% else %}
 O decaimento rápido da função de autocorrelação sugere que a série possui uma dependência de curto prazo e tende à estacionariedade.
+{% endif %}
 
 
 \subsection{Questão 2: Testes de Estacionariedade}
 
 Para confirmar as impressões visuais, foram realizados os testes formais ADF e KPSS.
 
-\begin{table}[H]
+\begin{table}[htbp]
     \centering
     \caption{Resultados dos Testes de Estacionariedade}
     \label{tab:q2_results}
     \begin{tabular}{lcc}
-        \toprule
+        \hline
         Teste & p-valor & Conclusão (a 5\%) \\
-        \midrule
-        ADF & 0.0001 & Estacionária \\
-        KPSS & 0.0100 & Não Estacionária \\
-        \bottomrule
+        \hline
+        ADF & {{ "%.4f"|format(q2.adf_pvalue) }} & {% if q2.adf_pvalue < 0.05 %}Estacionária{% else %}Não Estacionária{% endif %} \\
+        KPSS & {{ "%.4f"|format(q2.kpss_pvalue) }} & {% if q2.kpss_pvalue < 0.05 %}Não Estacionária{% else %}Estacionária{% endif %} \\
+        \hline
     \end{tabular}
 \end{table}
 
-Os resultados indicam que há um conflito entre os testes. O teste ADF indica estacionariedade, enquanto o teste KPSS sugere o oposto. Isso pode indicar processos como estacionariedade por diferença ou tendência determinística.
+Os resultados indicam que:
+{% if q2.adf_pvalue < 0.05 and q2.kpss_pvalue >= 0.05 %}
+Ambos os testes concordam que a série é estacionária.
+{% elif q2.adf_pvalue >= 0.05 and q2.kpss_pvalue < 0.05 %}
+Ambos os testes concordam que a série NÃO é estacionária (possui raiz unitária ou tendência).
+{% else %}
+Há um conflito entre os testes. O teste ADF indica {% if q2.adf_pvalue < 0.05 %}estacionariedade{% else %}não estacionariedade{% endif %}, enquanto o teste KPSS sugere {% if q2.kpss_pvalue >= 0.05 %}estacionariedade{% else %}não estacionariedade{% endif %}. Isso pode indicar processos como estacionariedade por diferença ou tendência determinística.
+{% endif %}
 
 \subsection{Questão 3: Previsão com Suavização Exponencial Simples (SES)}
 
 O modelo SES foi ajustado aos dados. A Figura \ref{fig:q3_plot} ilustra o ajuste e a previsão.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=1.0\textwidth]{q3_forecast_plot.png}
     \caption{Previsão SES vs Dados Reais}
     \label{fig:q3_plot}
 \end{figure}
 
-O parâmetro de suavização ($\alpha$) estimado foi de 0.0495. Este valor baixo indica que o modelo considera um longo histórico passado, resultando em uma previsão suave e pouco reativa a flutuações recentes.
-Quanto à acurácia, o modelo obteve um MAPE de 15.65\% e um RMSE de 7.8038.
+O parâmetro de suavização ($\alpha$) estimado foi de {{ "%.4f"|format(q3.Alpha) }}. 
+{% if q3.Alpha < 0.2 %}
+Este valor baixo indica que o modelo considera um longo histórico passado, resultando em uma previsão suave e pouco reativa a flutuações recentes.
+{% elif q3.Alpha > 0.8 %}
+Este valor alto indica que o modelo reage fortemente às observações mais recentes (efeito memória curta).
+{% else %}
+Este valor intermediário indica um equilíbrio entre o histórico recente e passado.
+{% endif %}
+
+Quanto à acurácia, o modelo obteve um MAPE de {{ "%.2f"|format(q3.MAPE) }}\% e um RMSE de {{ "%.4f"|format(q3.RMSE) }}.
+{% if q3.MAPE < 20 %}
 O MAPE abaixo de 20\% sugere que o modelo possui uma boa capacidade preditiva para o horizonte testado.
+{% else %}
+O MAPE elevado sugere que o modelo SES pode não ser o mais adequado, possivelmente devido à presença de tendência ou sazonalidade não capturadas.
+{% endif %}
+
 O método SES, por projetar uma previsão constante, é teoricamente limitado para séries com tendência ou sazonalidade marcantes.
 
-\newpage
 \subsection{Questão 4: Diagnóstico de Outliers}
 
 A análise de resíduos (Figura \ref{fig:q4_plot}) permitiu identificar pontos atípicos.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=1.0\textwidth]{q4_outliers_plot.png}
     \caption{Resíduos do Modelo SES e Outliers Detectados}
     \label{fig:q4_plot}
 \end{figure}
 
-Utilizando o critério de 3 desvios padrão, foram identificados 3 \textit{outliers}. A presença destes pontos, com um desvio padrão residual de 7.0548, pode impactar a precisão das estimativas de erro (RMSE) e aumentar a incerteza das previsões. A natureza destes pontos deve ser investigada para determinar se são erros de coleta ou eventos reais atípicos.
+Utilizando o critério de 3 desvios padrão, foram identificados {{ q4.outliers_count }} \textit{outliers}. 
+A presença destes pontos, com um desvio padrão residual de {{ "%.4f"|format(q4.std_resid) }}, pode impactar a precisão das estimativas de erro (RMSE) e aumentar a incerteza das previsões. 
+{% if q4.outliers_count > 0 %}
+A natureza destes pontos deve ser investigada para determinar se são erros de coleta ou eventos reais atípicos.
+{% else %}
+A ausência de outliers estatísticos sugere que o modelo comporta-se de maneira estável em relação à variabilidade dos dados.
+{% endif %}
 
 \section{Conclusões}
 
-Com base em todas as análises realizadas, conclui-se que o modelo SES apresenta um desempenho  aceitável para previsões de curto prazo, dada sua simplicidade e o erro percentual controlado.
-A análise exploratória indicou presença de sazonalidade, e os testes de estacionariedade apontaram para uma série estacionária.
-Como o SES não modela explicitamente tendência nem sazonalidade, sua aplicação deve ser feita com cautela, especialmente para horizontes de previsão mais longos onde esses componentes estruturais dominariam. A identificação de 3 \textit{outliers} reforça a necessidade de monitoramento contínuo do modelo.
+Com base em todas as análises realizadas, conclui-se que o modelo SES apresenta um desempenho {% if q3.MAPE < 20 %}aceitável{% else %}limitado{% endif %} para previsões de curto prazo.
+A análise exploratória indicou {% if q1.peaks %}presença{% else %}ausência{% endif %} de sazonalidade forte na frequência analisada.
+Como o SES não modela explicitamente tendência nem sazonalidade, sua aplicação deve ser feita com cautela, especialmente para horizontes de previsão mais longos onde esses componentes estruturais dominariam.
 
 \end{document}
 """
@@ -244,5 +275,29 @@ Como o SES não modela explicitamente tendência nem sazonalidade, sua aplicaç�
         print(f"Relatório LaTeX salvo em: {self.file_path_report}")
         return "Relatório final gerado com sucesso."
 
+    def _compile_pdf(self):
+        """
+        Compila o arquivo .tex para .pdf usando pdflatex.
+        """
+        try:
+            # Executa pdflatex duas vezes para garantir referências cruzadas corretas
+            for _ in range(2):
+                subprocess.run(
+                    ["pdflatex", "-interaction=nonstopmode", "relatorio_final.tex"],
+                    cwd=self.output_dir,
+                    check=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE
+                )
+            print(f"PDF gerado com sucesso em: {os.path.join(self.output_dir, 'relatorio_final.pdf')}")
+        except subprocess.CalledProcessError as e:
+            print("Erro ao compilar o PDF.")
+            # Tentativa de decodificar com latin1, fallback para utf-8 ignorando erros
+            try:
+                print(e.stdout.decode('latin1'))
+            except:
+                print(e.stdout.decode('utf-8', errors='ignore'))
+
     def run(self):
-        return self.persist_results()
+        self.persist_results()
+        self._compile_pdf()
